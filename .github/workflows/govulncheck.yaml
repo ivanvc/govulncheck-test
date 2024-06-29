@@ -1,0 +1,19 @@
+---
+name: Go Vulnerability Checker
+on: push
+permissions: read-all
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - id: goversion
+        run: echo "goversion=$(grep -E '^go ' go.mod | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-go@cdcb36043654635271a94b9a6d1392de5bb323a7 # v5.0.1
+        with:
+          go-version: ${{ steps.goversion.outputs.goversion }}
+      - run: date
+      - run: |
+          set -euo pipefail
+
+          make
